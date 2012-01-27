@@ -111,6 +111,16 @@ try {
   // ignore
 }
 
+var suite = new Suite('')
+  , ui = false;
+
+// load interfaces
+
+program.on('ui', function(interface){
+  interfaces[interface](suite);
+  ui = true;
+});
+
 // parse args
 
 program.parse(process.argv);
@@ -121,10 +131,12 @@ Error.stackTraceLimit = Infinity; // TODO: config
 
 // reporter
 
-var suite = new Suite('')
-  , Base = require('../lib/reporters/base')
-  , Reporter = require('../lib/reporters/' + program.reporter)
-  , ui = interfaces[program.ui](suite);
+var Base = require('../lib/reporters/base')
+  , Reporter = require('../lib/reporters/' + program.reporter);
+
+if(!ui){  // loads default ui, if none loaded yet.
+  ui = interfaces[program.ui](suite);
+}
 
 // --no-colors
 
